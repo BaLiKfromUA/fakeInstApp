@@ -43,5 +43,13 @@
             android:onClick="onClick"
             android:text="@string/find_button_text"
             android:textColor="@color/common_google_signin_btn_text_dark" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button"
+            android:onClick="onClick"
+            />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
