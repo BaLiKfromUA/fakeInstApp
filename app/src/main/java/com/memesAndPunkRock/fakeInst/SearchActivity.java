@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
 import com.memesAndPunkRock.fakeInst.api.data.UserData;
 import com.memesAndPunkRock.fakeInst.api.impl.InstApiControllerImpl;
@@ -24,9 +26,7 @@ import com.memesAndPunkRock.fakeInst.ml.impl.CustomModelControllerImpl;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnClickListener {
 
-    private EditText usernameField;
-
-    private TextView textView;
+    private TextInputEditText usernameField;
 
     private FloatingActionButton findBtn;
 
@@ -43,7 +43,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
         findBtn = findViewById(R.id.floating_action_button);
         usernameField = findViewById(R.id.usernameField);
-        textView = findViewById(R.id.textView);
 
         modelController = new CustomModelControllerImpl(this);
     }
