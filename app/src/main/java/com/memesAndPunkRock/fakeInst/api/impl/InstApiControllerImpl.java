@@ -18,7 +18,7 @@ import java.util.List;
 public class InstApiControllerImpl implements InstApiController {
     private static final String TAG = "INST_API";
 
-    private final String ACCESS_TOKEN = "4779711016.1677ed0.a6ef4ef0fb6649f18b835f8ac15e2b65";
+    private final String ACCESS_TOKEN = "5406911792.f448b8d.a6705f94281f4bda8a8bb4238e7beeca";
     private Instagram instagram = null;
 
     public InstApiControllerImpl() {
@@ -32,8 +32,8 @@ public class InstApiControllerImpl implements InstApiController {
 
         UserData convertedData = new UserData();
         float numberOfNumChars = feedData.getUserName().chars()
-                                                        .filter(Character::isDigit)
-                                                        .count();
+                .filter(Character::isDigit)
+                .count();
         convertedData.setRatioOfNumbersCharsToUsernameLength(numberOfNumChars / feedData.getUserName().length());
         //todo:
         return convertedData;
