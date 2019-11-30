@@ -5,4 +5,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="colorDeepSkyBlue">#00688B</color>
     <color name="colorGreenSuccess">#4BB543</color>
+    <color name="colorGreyContainer">#DCDCDC</color>
 </resources>
