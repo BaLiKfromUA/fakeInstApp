@@ -36,7 +36,7 @@ public class CustomModelControllerImpl implements CustomModelController {
      * Name of the model file hosted with Firebase.
      */
     private static final String HOSTED_MODEL_NAME = "balik_version";
-    private static final String LOCAL_MODEL_ASSET = "test_model.tflite";
+    private static final String LOCAL_MODEL_ASSET = "model.tflite";
     /**
      * Name of the label file stored in Assets.
      */
@@ -117,6 +117,7 @@ public class CustomModelControllerImpl implements CustomModelController {
                             .setLocalModelName("asset")
                             .build();
             mInterpreter = FirebaseModelInterpreter.getInstance(modelOptions);
+            Log.e(TAG, "model setup");
         } catch (FirebaseMLException e) {
             Log.e(TAG, "Error while setting up the model\n"+e.getMessage());
         }
