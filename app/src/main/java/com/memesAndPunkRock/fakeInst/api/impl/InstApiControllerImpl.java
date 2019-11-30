@@ -1,15 +1,19 @@
 package com.memesAndPunkRock.fakeInst.api.impl;
 
+import android.util.Log;
+
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
 import com.memesAndPunkRock.fakeInst.api.data.UserData;
 import com.memesAndPunkRock.fakeInst.exception.UserNotFoundException;
 
-import org.jinstagram.Instagram;
-import org.jinstagram.entity.users.feed.UserFeed;
-import org.jinstagram.entity.users.feed.UserFeedData;
-import org.jinstagram.exceptions.InstagramException;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 
-import java.util.List;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * @author BaLiK
@@ -17,45 +21,56 @@ import java.util.List;
  * */
 public class InstApiControllerImpl implements InstApiController {
     private static final String TAG = "INST_API";
+    private static final String BASE_URL = "https://inst-api.herokuapp.com";
+    private static final String USER_REQUEST_PATTERN = BASE_URL+"/username=%s";
 
-    private final String ACCESS_TOKEN = "5406911792.f448b8d.a6705f94281f4bda8a8bb4238e7beeca";
-    private Instagram instagram = null;
+    private String doGet(String requestURL) throws IOException {
+        URL url = new URL(requestURL);
+        HttpsURLConnection urlConnection = (HttpsURLConnection)url.openConnection();
+        urlConnection.setRequestMethod("GET");
+        int statusCode = urlConnection.getResponseCode();
+        if (statusCode ==  200) {
+            InputStream it = new BufferedInputStream(urlConnection.getInputStream());
+            InputStreamReader read = new InputStreamReader(it);
+            BufferedReader buff = new BufferedReader(read);
+            StringBuilder dta = new StringBuilder();
+            String chunks;
+            while((chunks = buff.readLine()) != null) {
+                dta.append(chunks);
+            }
 
-    public InstApiControllerImpl() {
-        this.instagram = new Instagram(ACCESS_TOKEN);
+            return dta.toString();
+        }
+        else {
+            return "null";
+        }
     }
 
-    private UserData convertUserFeedDataToUserData(UserFeedData feedData) {
+
+    private UserData convertUserFeedDataToUserData(String feedData) {
         if (feedData == null){
             return null;
         }
 
         UserData convertedData = new UserData();
-        float numberOfNumChars = feedData.getUserName().chars()
+        float numberOfNumChars = feedData.chars()
                 .filter(Character::isDigit)
                 .count();
-        convertedData.setRatioOfNumbersCharsToUsernameLength(numberOfNumChars / feedData.getUserName().length());
+        convertedData.setRatioOfNumbersCharsToUsernameLength(numberOfNumChars / feedData.length());
         //todo:
         return convertedData;
     }
 
     @Override
     public UserData getUserDataByUserName(String username) throws UserNotFoundException {
+        String requestUrl = String.format(USER_REQUEST_PATTERN, username);
         try {
-            if(username == null || username.isEmpty()){
-                throw new InstagramException("invalid username");
-            }
-
-            UserFeed userFeed = instagram.searchUser(username);
-            List<UserFeedData> users = userFeed.getUserList();
-            if (users.isEmpty()){
-                throw new InstagramException("user list is empty");
-            }
-
-            return convertUserFeedDataToUserData(users.get(0));
-        } catch (InstagramException e) {
-            throw new UserNotFoundException("Search user error. Reason:\n"+e.getMessage());
+            String resultJsonString = doGet(requestUrl);
+            Log.e(TAG,resultJsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        throw new UserNotFoundException("kek");
     }
 
 }
