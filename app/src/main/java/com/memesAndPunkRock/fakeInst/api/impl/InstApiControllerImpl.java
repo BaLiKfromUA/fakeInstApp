@@ -62,7 +62,7 @@ public class InstApiControllerImpl implements InstApiController {
     }
 
     @Override
-    public UserData getUserDataByUserName(String username) throws UserNotFoundException {
+    public UserData getUserDataByUserName(String username){
         String requestUrl = String.format(USER_REQUEST_PATTERN, username);
         try {
             String resultJsonString = doGet(requestUrl);
@@ -70,7 +70,7 @@ public class InstApiControllerImpl implements InstApiController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        throw new UserNotFoundException("kek");
+        return null;
     }
 
 }
