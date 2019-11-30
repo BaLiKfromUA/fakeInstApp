@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
 import com.memesAndPunkRock.fakeInst.api.impl.InstApiControllerImpl;
 import com.memesAndPunkRock.fakeInst.exception.UserNotFoundException;
+import com.memesAndPunkRock.fakeInst.ml.CustomModelController;
+import com.memesAndPunkRock.fakeInst.ml.impl.CustomModelControllerImpl;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnClickListener {
 
@@ -28,6 +30,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
     private InstApiController instApi = new InstApiControllerImpl();
 
+    private CustomModelController modelController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
         findBtn = findViewById(R.id.findBtn);
         usernameField = findViewById(R.id.usernameField);
         textView = findViewById(R.id.textView);
+
+        modelController = new CustomModelControllerImpl(this);
     }
 
     @Override
