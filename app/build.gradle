@@ -3,13 +3,13 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
-
     defaultConfig {
         applicationId "com.memesAndPunkRock.fakeInst"
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,7 +47,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.sachinhandiekar/jInstagram
     implementation group: 'com.sachinhandiekar', name: 'jInstagram', version: '1.2.2'
     implementation group: 'org.slf4j', name: 'slf4j-android', version: '1.7.29'
-    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation group: 'com.google.android.material', name: 'material', version: '1.2.0-alpha02'
 
 }
 apply plugin: 'com.google.gms.google-services'
