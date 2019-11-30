@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "889052030729",
+    "firebase_url": "https://inst-fake.firebaseio.com",
+    "project_id": "inst-fake",
+    "storage_bucket": "inst-fake.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889052030729:android:99aac85b5ef12e1b9c15d8",
+        "android_client_info": {
+          "package_name": "com.memesAndPunkRock.instatestistatce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889052030729-3jvru95q5pe4ald6j860j4nekjsnv2p4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCODhYBQKv9EtbF3d5D1Ry2szZp4qW9GvQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "889052030729-3jvru95q5pe4ald6j860j4nekjsnv2p4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
