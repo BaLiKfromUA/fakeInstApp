@@ -4,24 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".SearchActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:onClick="onClick"
-        android:src="@drawable/baseline_search_white_48"
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/findBtn"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:layout_width="173dp"
+        android:layout_height="75dp"
+        android:onClick="onClick"
         app:backgroundTint="@color/colorDeepSkyBlue"
-        app:tint="@android:color/white"
+        app:icon="@drawable/baseline_search_white_48"
+        app:iconGravity="textEnd"
+        app:iconSize="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.967"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.945" />
+        app:layout_constraintVertical_bias="0.939"
+        app:tint="@android:color/white" />
 
     <LinearLayout
         android:id="@+id/mainLinear"
@@ -35,21 +38,52 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.363">
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/logo" />
+
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/please_enter_username"
-            android:textSize="18sp" />
+            android:fontFamily="sans-serif"
+            android:text="@string/app_description"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:typeface="normal" />
 
-        <EditText
-            android:id="@+id/usernameField"
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_full_description"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/username_hint"
-            android:importantForAutofill="no"
-            android:inputType="text" />
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:helperText="@string/please_enter_username"
+            app:endIconMode="clear_text"
+            app:boxBackgroundColor="@android:color/white"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/usernameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/button"

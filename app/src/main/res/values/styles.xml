@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/colorDeepSkyBlue</item>
         <item name="colorPrimaryDark">@color/colorDeepSkyBlue</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/MyBar</item>
+    </style>
+
+    <style name="MyBar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleTextColor">@android:color/white</item>
     </style>
 
 </resources>
