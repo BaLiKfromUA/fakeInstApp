@@ -2,6 +2,7 @@ package com.memesAndPunkRock.fakeInst;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -31,10 +32,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
 
         findBtn = findViewById(R.id.findBtn);
         usernameField = findViewById(R.id.usernameField);
@@ -52,6 +49,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
 //                    textView.setText(username);
             }
+        }else if(v.getId() == R.id.button){
+            Intent intent = new Intent(this, InfoActivity.class);
+            startActivity(intent);
         }
     }
 

@@ -3,4 +3,7 @@
     <string name="please_enter_username">Please enter instagram username</string>
     <string name="username_hint">Username</string>
     <string name="find_button_text">Find</string>
+    <string name="instagram_avatar_description">Instagram avatar</string>
+    <string name="fake">FAKE</string>
+    <string name="real">REAL</string>
 </resources>
