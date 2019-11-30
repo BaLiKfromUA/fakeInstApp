@@ -9,4 +9,6 @@
     <string name="username_placeholder">username placeholder</string>
     <string name="follower">Follower</string>
     <string name="following">Following</string>
+    <string name="app_description">Suspected\nAccount Analysis</string>
+    <string name="app_full_description">Analyze the account and reveal the truth!</string>
 </resources>
