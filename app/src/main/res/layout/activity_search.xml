@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/mainLinear"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -35,12 +35,13 @@
             android:inputType="text" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/findBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@color/colorDeepSkyBlue"
-            android:text="@string/go_button_text"
+            android:background="@drawable/rounded_button"
+            android:onClick="onClick"
+            android:text="@string/find_button_text"
             android:textColor="@color/common_google_signin_btn_text_dark" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

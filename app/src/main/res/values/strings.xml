@@ -2,5 +2,5 @@
     <string name="app_name">My Application</string>
     <string name="please_enter_username">Please enter instagram username</string>
     <string name="username_hint">Username</string>
-    <string name="go_button_text">GO</string>
+    <string name="find_button_text">Find</string>
 </resources>
