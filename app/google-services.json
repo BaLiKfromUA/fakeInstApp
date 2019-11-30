@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "889052030729",
-    "firebase_url": "https://inst-fake.firebaseio.com",
-    "project_id": "inst-fake",
-    "storage_bucket": "inst-fake.appspot.com"
+    "project_number": "717417982689",
+    "firebase_url": "https://inst-fake-5c2a8.firebaseio.com",
+    "project_id": "inst-fake-5c2a8",
+    "storage_bucket": "inst-fake-5c2a8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:889052030729:android:99aac85b5ef12e1b9c15d8",
+        "mobilesdk_app_id": "1:717417982689:android:a2d7df9bb3119725f525a0",
         "android_client_info": {
-          "package_name": "com.memesAndPunkRock.instatestistatce"
+          "package_name": "com.memesAndPunkRock.fakeInst"
         }
       },
       "oauth_client": [
         {
-          "client_id": "889052030729-3jvru95q5pe4ald6j860j4nekjsnv2p4.apps.googleusercontent.com",
+          "client_id": "717417982689-fuo85kdllsvk16gk40e3ecpboi5ra52t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCODhYBQKv9EtbF3d5D1Ry2szZp4qW9GvQ"
+          "current_key": "AIzaSyALrJ6ASo_bjInGkAzNfpcmScxY-O9deaw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "889052030729-3jvru95q5pe4ald6j860j4nekjsnv2p4.apps.googleusercontent.com",
+              "client_id": "717417982689-fuo85kdllsvk16gk40e3ecpboi5ra52t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
