@@ -1,22 +1,15 @@
 package com.memesAndPunkRock.fakeInst;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
 import com.memesAndPunkRock.fakeInst.api.data.UserData;
 import com.memesAndPunkRock.fakeInst.api.impl.InstApiControllerImpl;
@@ -28,7 +21,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
     private TextInputEditText usernameField;
 
-    private FloatingActionButton findBtn;
+    private MaterialButton findBtn;
 
     private InstApiController instApi = new InstApiControllerImpl();
 
@@ -41,7 +34,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        findBtn = findViewById(R.id.floating_action_button);
+        findBtn = findViewById(R.id.findBtn);
         usernameField = findViewById(R.id.usernameField);
 
         modelController = new CustomModelControllerImpl(this);
@@ -49,7 +42,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.floating_action_button) {
+        if (v.getId() == R.id.findBtn) {
             if (usernameField.getText() != null && !usernameField.getText().toString().isEmpty()) {
                 String username = usernameField.getText().toString();
                 AsyncInstaSearch search = new AsyncInstaSearch();

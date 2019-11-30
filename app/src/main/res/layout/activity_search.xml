@@ -9,6 +9,7 @@
 
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/findBtn"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_width="173dp"
         android:layout_height="75dp"
