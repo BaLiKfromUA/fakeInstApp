@@ -4,15 +4,12 @@ import android.util.Log;
 
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
 import com.memesAndPunkRock.fakeInst.api.data.UserData;
-import com.memesAndPunkRock.fakeInst.exception.UserNotFoundException;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -32,7 +29,7 @@ import javax.net.ssl.X509TrustManager;
 public class InstApiControllerImpl implements InstApiController {
     private static final String TAG = "INST_API";
     private static final String BASE_URL = "https://inst-api.herokuapp.com";
-    private static final String USER_REQUEST_PATTERN = BASE_URL+"/username=%s";
+    private static final String USER_REQUEST_PATTERN = BASE_URL+"/";
 
     private String createConnection(String urlS, String methodInvoked, String patchBody, String postBody, String putBody){
         URL url ;
@@ -42,13 +39,7 @@ public class InstApiControllerImpl implements InstApiController {
 
         try {
             url = new URL(urlS);
-            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-                @Override
-
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
+            HostnameVerifier hostnameVerifier = (hostname, session) -> true;
             TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         public X509Certificate[] getAcceptedIssuers() {
@@ -79,7 +70,7 @@ public class InstApiControllerImpl implements InstApiController {
             if (patchBody  != null ){
                 Log.i(TAG, " createConnection with PATH with body" );
                 connection.setRequestMethod("PATCH");
-                connection.setRequestProperty("data",patchBody);
+                connection.setRequestProperty("username",patchBody);
                 connection.addRequestProperty("Content-Type", "application/json");
                 DataOutputStream dStream = new DataOutputStream(connection.getOutputStream());
                 dStream.writeBytes(patchBody);
@@ -135,7 +126,7 @@ public class InstApiControllerImpl implements InstApiController {
                     sb.append(line+"\n");
                 }
                 String toBeReturned_1 = sb.toString();
-                Log.i(TAG, " createConnetion error received " +  responseCode  + "  " + toBeReturned_1) ;
+                Log.i(TAG, " createConnection1 error received " +  responseCode  + "  " + toBeReturned_1) ;
 
             }
             else{
@@ -145,13 +136,11 @@ public class InstApiControllerImpl implements InstApiController {
                 StringBuilder sb = new StringBuilder();
                 String line = null;
                 while ((line = br.readLine()) != null) {
-                    sb.append(line+"\n");
+                    sb.append(line).append("\n");
                 }
                 toBeReturned = sb.toString();
 
-
             }
-
 
         } catch (IOException e) {
             error = e.getMessage();
@@ -189,12 +178,11 @@ public class InstApiControllerImpl implements InstApiController {
 
     @Override
     public UserData getUserDataByUserName(String username){
-        String requestUrl = String.format(USER_REQUEST_PATTERN, username);
-
+        String requestUrl = USER_REQUEST_PATTERN ;
+        String body = username;
         try {
             String methodInvoked = "GET";
-            createConnection (requestUrl, methodInvoked,null, null,null);
-            createConnection (requestUrl, methodInvoked,null, null,null);
+            createConnection (requestUrl, methodInvoked,body, null,null);
         } catch (Exception e) {
             e.printStackTrace();
         }
