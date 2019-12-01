@@ -3,7 +3,12 @@ package com.memesAndPunkRock.fakeInst.api.impl;
 import android.util.Log;
 
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
+import com.memesAndPunkRock.fakeInst.api.data.UserContainer;
 import com.memesAndPunkRock.fakeInst.api.data.UserData;
+import com.memesAndPunkRock.fakeInst.api.data.UserInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -14,11 +19,11 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -32,10 +37,9 @@ public class InstApiControllerImpl implements InstApiController {
     private static final String USER_REQUEST_PATTERN = BASE_URL+"/";
 
     private String createConnection(String urlS, String methodInvoked, String patchBody, String postBody, String putBody){
-        URL url ;
+        URL url;
         BufferedReader br = null;
         String toBeReturned="";
-        String error;
 
         try {
             url = new URL(urlS);
@@ -59,13 +63,11 @@ public class InstApiControllerImpl implements InstApiController {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, null);
 
-
             HttpsURLConnection  connection = (HttpsURLConnection) url.openConnection();
             connection.setConnectTimeout(60000);
             HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
             connection.setSSLSocketFactory(sc.getSocketFactory());
             connection.setHostnameVerifier(hostnameVerifier);
-
 
             if (patchBody  != null ){
                 Log.i(TAG, " createConnection with PATH with body" );
@@ -131,7 +133,6 @@ public class InstApiControllerImpl implements InstApiController {
             }
             else{
 
-
                 br = new BufferedReader( new InputStreamReader(connection.getInputStream()));
                 StringBuilder sb = new StringBuilder();
                 String line = null;
@@ -142,13 +143,10 @@ public class InstApiControllerImpl implements InstApiController {
 
             }
 
-        } catch (IOException e) {
-            error = e.getMessage();
+        } catch (IOException | KeyManagementException | NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally{
+        } // TODO Auto-generated catch block
+        finally{
             try {
                 if (br!=null)
                     br.close();
@@ -157,36 +155,77 @@ public class InstApiControllerImpl implements InstApiController {
                 e.printStackTrace();
             }
         }
+
         Log.i(TAG, " createConnetion  finally returned" +  toBeReturned );
         return toBeReturned;
     }
 
 
-    private UserData convertUserFeedDataToUserData(String feedData) {
-        if (feedData == null){
+    private UserData parseUserData(String userDataString) throws JSONException {
+        if (userDataString == null || userDataString.isEmpty()){
             return null;
         }
 
+        final JSONObject jObject = new JSONObject(userDataString);
+
         UserData convertedData = new UserData();
-        float numberOfNumChars = feedData.chars()
-                .filter(Character::isDigit)
-                .count();
-        convertedData.setRatioOfNumbersCharsToUsernameLength(numberOfNumChars / feedData.length());
-        //todo:
+        convertedData.setIsUserWithoutAvatar((float) jObject.getDouble("profile pic"));
+        convertedData.setRatioOfNumbersCharsToUsernameLength((float)jObject.getDouble("nums/length username"));
+        convertedData.setFullNameTokensNumber((float)jObject.getDouble("fullname words"));
+        convertedData.setRatioOfNumbersCharsToFullNameLength((float)jObject.getDouble("nums/length fullname"));
+        convertedData.setIsUsernameEqualsFullname((float)jObject.getDouble("name==username"));
+        convertedData.setDescriptionLength((float)jObject.getDouble("description length"));
+        convertedData.setHasExternalUrl((float)jObject.getDouble("external URL"));
+        convertedData.setPostsNumber((float)jObject.getDouble("#posts"));
+        convertedData.setFollowersNumber((float)jObject.getDouble("#followers"));
+        convertedData.setFollowsNumber((float)jObject.getDouble("#follows"));
+
         return convertedData;
     }
 
+    private UserInfo parseUserInfo(String userInfoString) throws JSONException {
+        if(userInfoString == null || userInfoString.isEmpty()){
+            return null;
+        }
+
+        final JSONObject jObject = new JSONObject(userInfoString);
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setAvatarUrl(jObject.getString("pic_url"));
+        userInfo.setUsername(jObject.getString("username"));
+        userInfo.setFollowers(jObject.getString("followers"));
+        userInfo.setFollowing(jObject.getString("follows"));
+        userInfo.setIsReal("True");// todo: refactor
+
+        return userInfo;
+    }
+
     @Override
-    public UserData getUserDataByUserName(String username){
-        String requestUrl = USER_REQUEST_PATTERN ;
-        String body = username;
+    public UserContainer getUserDataByUserName(String username){
         try {
-            String methodInvoked = "GET";
-            createConnection (requestUrl, methodInvoked,body, null,null);
+            final String methodInvoked = "GET";
+            Log.i("0", "0");
+            final String jsonString = createConnection (USER_REQUEST_PATTERN, methodInvoked, username,
+                    null,null);
+            final JSONObject jObject = new JSONObject(jsonString);
+            final String message = jObject.getString("message");
+
+            Log.i("1","1");
+
+            if (message.equals("empty") || message.equals("unsuccess")){
+                return null;
+            }
+
+            Log.i("2", "2");
+
+            UserInfo userInfo = parseUserInfo(message);
+            UserData userData = parseUserData(jsonString);
+
+            Log.i("3","3");
+            return new UserContainer(userData, userInfo);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.getStackTrace();
         }
         return null;
     }
-
 }

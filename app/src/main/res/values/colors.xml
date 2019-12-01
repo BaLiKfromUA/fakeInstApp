@@ -6,4 +6,6 @@
     <color name="colorDeepSkyBlue">#00688B</color>
     <color name="colorGreenSuccess">#4BB543</color>
     <color name="colorGreyContainer">#DCDCDC</color>
+    <color name="colorGreenContainer">#20CC82</color>
+    <color name="colorRedFail">#FC100D</color>
 </resources>

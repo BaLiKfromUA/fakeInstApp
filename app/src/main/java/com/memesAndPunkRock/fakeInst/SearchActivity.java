@@ -3,16 +3,20 @@ package com.memesAndPunkRock.fakeInst;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
-import com.memesAndPunkRock.fakeInst.api.data.UserData;
+import com.memesAndPunkRock.fakeInst.api.data.UserContainer;
 import com.memesAndPunkRock.fakeInst.api.impl.InstApiControllerImpl;
 import com.memesAndPunkRock.fakeInst.ml.CustomModelController;
 import com.memesAndPunkRock.fakeInst.ml.impl.CustomModelControllerImpl;
@@ -23,11 +27,13 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
     private MaterialButton findBtn;
 
+    private Handler h;
+    private Thread t;
     private InstApiController instApi = new InstApiControllerImpl();
 
     private CustomModelController modelController;
 
-    private UserData userData;
+    private UserContainer userContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
         findBtn = findViewById(R.id.findBtn);
         usernameField = findViewById(R.id.usernameField);
-
         modelController = new CustomModelControllerImpl(this);
     }
 
@@ -45,14 +50,30 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
         if (v.getId() == R.id.findBtn) {
             if (usernameField.getText() != null && !usernameField.getText().toString().isEmpty()) {
                 String username = usernameField.getText().toString();
-                AsyncInstaSearch search = new AsyncInstaSearch();
-                search.execute(username);
 
-                if (userData != null) {
+                t = new Thread() {
+                    @Override
+                    public void interrupt() {
+                        super.interrupt();
+                    }
+
+                    @Override
+                    public void run() {
+                       userContainer = instApi.getUserDataByUserName(username);
+                       Thread.currentThread().interrupt();
+                    }
+                };
+                t.start();
+
+                while (!t.isInterrupted()){
+                    //do nothing
+                }
+
+                if (userContainer != null) {
                     Intent intent = new Intent(this, InfoActivity.class);
-                    intent.putExtra("USER_DATA", userData);
+                    intent.putExtra("USER_CONTAINER", userContainer.getUserInfo());
                     startActivity(intent);
-                }else{
+                } else {
                     new MaterialAlertDialogBuilder(this)
                             .setTitle("Search don't get any result")
                             .setMessage("Cannot find user")
@@ -63,22 +84,36 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
         }
     }
 
-    private class AsyncInstaSearch extends AsyncTask<String, Void, UserData> {
+    private class AsyncInstaSearch extends AsyncTask<String, Void, UserContainer> {
         @Override
-        protected UserData doInBackground(String... strings) {
+        protected UserContainer doInBackground(String... strings) {
+            Log.i("Async", "BACK");
             return instApi.getUserDataByUserName(strings[0]);
-
         }
 
         @Override
         protected void onPreExecute() {
+            if(isCancelled()){
+                return;
+            }
             super.onPreExecute();
+            Log.i("Async", "PRE");
         }
 
         @Override
-        protected void onPostExecute(UserData userData) {
-            super.onPostExecute(userData);
-            SearchActivity.this.userData = userData;
+        protected void onPostExecute(UserContainer userContainer) {
+            if(isCancelled()){
+                return;
+            }
+            this.cancel(true);
+            SearchActivity.this.userContainer = userContainer;
+            Log.i("Async", "POST");
+            super.onPostExecute(userContainer);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
         }
     }
 }
