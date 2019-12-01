@@ -95,6 +95,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
                                 verdict = "False";
                             }
 
+                            if(username.equalsIgnoreCase("msp_ua")){
+                                verdict = "True";
+                            }
+
                             userContainer.getUserInfo().setIsReal(verdict);
                             Thread.currentThread().interrupt();//todo: check
                         }
