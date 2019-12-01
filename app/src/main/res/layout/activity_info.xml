@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
+            android:textSize="16sp"
             android:text="@string/username_placeholder" />
 
         <TextView
@@ -96,13 +97,15 @@
 
     <LinearLayout
         android:id="@+id/infoLinear"
-        android:layout_width="351dp"
-        android:layout_height="432dp"
+        android:layout_width="336dp"
+        android:layout_height="320dp"
         android:background="@drawable/rounded_info_shape"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:layout_width="match_parent"
@@ -166,6 +169,7 @@
             app:layout_constraintStart_toEndOf="@+id/linearLayout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.119" />
+
 
     </LinearLayout>
 
