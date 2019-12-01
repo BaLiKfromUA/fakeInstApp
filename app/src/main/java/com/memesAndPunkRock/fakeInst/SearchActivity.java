@@ -12,7 +12,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
-import com.memesAndPunkRock.fakeInst.api.data.UserData;
+import com.memesAndPunkRock.fakeInst.api.data.UserContainer;
 import com.memesAndPunkRock.fakeInst.api.impl.InstApiControllerImpl;
 import com.memesAndPunkRock.fakeInst.ml.CustomModelController;
 import com.memesAndPunkRock.fakeInst.ml.impl.CustomModelControllerImpl;
@@ -27,7 +27,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
     private CustomModelController modelController;
 
-    private UserData userData;
+    private UserContainer userContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +46,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
             if (usernameField.getText() != null && !usernameField.getText().toString().isEmpty()) {
                 String username = usernameField.getText().toString();
                 AsyncInstaSearch search = new AsyncInstaSearch();
-                search.execute(username);
+//                search.execute(username); fuck lifecycle
+                userContainer = search.doInBackground(username);
 
-                if (userData != null) {
+                if (userContainer != null) {
                     Intent intent = new Intent(this, InfoActivity.class);
-                    intent.putExtra("USER_DATA", userData);
+                    intent.putExtra("USER_CONTAINER", userContainer);
                     startActivity(intent);
                 }else{
                     new MaterialAlertDialogBuilder(this)
@@ -63,9 +64,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
         }
     }
 
-    private class AsyncInstaSearch extends AsyncTask<String, Void, UserData> {
+    private class AsyncInstaSearch extends AsyncTask<String, Void, UserContainer> {
         @Override
-        protected UserData doInBackground(String... strings) {
+        protected UserContainer doInBackground(String... strings) {
             return instApi.getUserDataByUserName(strings[0]);
 
         }
@@ -76,9 +77,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
         }
 
         @Override
-        protected void onPostExecute(UserData userData) {
-            super.onPostExecute(userData);
-            SearchActivity.this.userData = userData;
+        protected void onPostExecute(UserContainer userContainer) {
+            super.onPostExecute(userContainer);
         }
     }
 }

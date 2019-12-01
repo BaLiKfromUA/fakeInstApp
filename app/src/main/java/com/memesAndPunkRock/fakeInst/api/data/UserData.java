@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author BaLiK
  *
  * **/
-public class UserData implements Serializable {
+public class UserData {
     /**
      * user has profile picture or not
      * **/

@@ -1,6 +1,8 @@
 package com.memesAndPunkRock.fakeInst.api.data;
 
-public class UserContainer {
+import java.io.Serializable;
+
+public class UserContainer  implements Serializable {
     private UserData userData = null;
     private UserInfo userInfo = null;
 
