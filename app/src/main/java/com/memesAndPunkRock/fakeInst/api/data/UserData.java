@@ -49,6 +49,8 @@ public class UserData implements Serializable {
 
     private Float followsNumber;
 
+    private Float isPrivate;
+
     public Float getIsUserWithoutAvatar() {
         return isUserWithoutAvatar;
     }
@@ -127,5 +129,13 @@ public class UserData implements Serializable {
 
     public void setFollowsNumber(Float followsNumber) {
         this.followsNumber = followsNumber;
+    }
+
+    public Float getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Float isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }
