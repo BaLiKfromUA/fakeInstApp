@@ -3,6 +3,8 @@ package com.memesAndPunkRock.fakeInst;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
@@ -25,6 +27,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
     private MaterialButton findBtn;
 
+    private Handler h;
+    private Thread t;
     private InstApiController instApi = new InstApiControllerImpl();
 
     private CustomModelController modelController;
@@ -38,7 +42,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
         findBtn = findViewById(R.id.findBtn);
         usernameField = findViewById(R.id.usernameField);
-
         modelController = new CustomModelControllerImpl(this);
     }
 
@@ -47,17 +50,28 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
         if (v.getId() == R.id.findBtn) {
             if (usernameField.getText() != null && !usernameField.getText().toString().isEmpty()) {
                 String username = usernameField.getText().toString();
-                AsyncInstaSearch search = new AsyncInstaSearch();
-                search.execute(username);
 
+                t = new Thread() {
+                    @Override
+                    public void interrupt() {
+                        super.interrupt();
+                    }
 
-                while (search.getStatus() != AsyncTask.Status.FINISHED){
-                    Log.d("Async" , "Run");
+                    @Override
+                    public void run() {
+                       userContainer = instApi.getUserDataByUserName(username);
+                       Thread.currentThread().interrupt();
+                    }
+                };
+                t.start();
+
+                while (!t.isInterrupted()){
+                    //do nothing
                 }
 
                 if (userContainer != null) {
                     Intent intent = new Intent(this, InfoActivity.class);
-                    intent.putExtra("USER_CONTAINER", userContainer);
+                    intent.putExtra("USER_CONTAINER", userContainer.getUserInfo());
                     startActivity(intent);
                 } else {
                     new MaterialAlertDialogBuilder(this)
@@ -73,21 +87,33 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
     private class AsyncInstaSearch extends AsyncTask<String, Void, UserContainer> {
         @Override
         protected UserContainer doInBackground(String... strings) {
-            Log.i("ASYNC", "BACK");
+            Log.i("Async", "BACK");
             return instApi.getUserDataByUserName(strings[0]);
-
         }
 
         @Override
         protected void onPreExecute() {
+            if(isCancelled()){
+                return;
+            }
             super.onPreExecute();
+            Log.i("Async", "PRE");
         }
 
         @Override
         protected void onPostExecute(UserContainer userContainer) {
-            super.onPostExecute(userContainer);
-            Log.i("Async", "POST");
+            if(isCancelled()){
+                return;
+            }
+            this.cancel(true);
             SearchActivity.this.userContainer = userContainer;
+            Log.i("Async", "POST");
+            super.onPostExecute(userContainer);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
         }
     }
 }
