@@ -195,7 +195,7 @@ public class InstApiControllerImpl implements InstApiController {
         userInfo.setUsername(jObject.getString("username"));
         userInfo.setFollowers(jObject.getString("followers"));
         userInfo.setFollowing(jObject.getString("follows"));
-        userInfo.setIsReal("True");// todo: refactor
+        userInfo.setIsReal("Real");// todo: refactor
 
         return userInfo;
     }
