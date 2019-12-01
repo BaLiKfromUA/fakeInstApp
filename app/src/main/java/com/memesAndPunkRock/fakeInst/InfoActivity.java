@@ -26,10 +26,11 @@ public class InfoActivity extends AppCompatActivity {
         ImageView avatar = findViewById(R.id.avatar);
         followerCount.setText(userContainer.getFollowers());
         followsCount.setText(userContainer.getFollowing());
-        statusTv.setText(userContainer.getIsReal());
-        if(userContainer.getIsReal().equalsIgnoreCase("fake")){
+        if(userContainer.getIsReal().equalsIgnoreCase("false")){
+            statusTv.setText(R.string.fake);
             statusTv.setBackground(ContextCompat.getDrawable(this, R.drawable.fake_rounded_shape));
-        }else{
+        }else if(userContainer.getIsReal().equalsIgnoreCase("true")){
+            statusTv.setText(R.string.real);
             statusTv.setBackground(ContextCompat.getDrawable(this, R.drawable.real_container));
         }
         Picasso.get().load(userContainer.getAvatarUrl()).into(avatar);

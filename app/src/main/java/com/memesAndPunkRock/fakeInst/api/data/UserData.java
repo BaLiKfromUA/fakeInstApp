@@ -50,6 +50,7 @@ public class UserData implements Serializable {
 
     private Float followsNumber;
 
+
     public Float getIsUserWithoutAvatar() {
         return isUserWithoutAvatar;
     }
