@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/avatar"
                 android:layout_width="144dp"
                 android:layout_height="153dp"
                 android:layout_gravity="center_horizontal"
