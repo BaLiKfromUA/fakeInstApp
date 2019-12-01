@@ -1,9 +1,9 @@
 package com.memesAndPunkRock.fakeInst.api;
 
-import com.memesAndPunkRock.fakeInst.api.data.UserData;
+import com.memesAndPunkRock.fakeInst.api.data.UserContainer;
 
 public interface InstApiController{
 
-    UserData getUserDataByUserName(final String username);
+    UserContainer getUserDataByUserName(final String username);
 
 }
