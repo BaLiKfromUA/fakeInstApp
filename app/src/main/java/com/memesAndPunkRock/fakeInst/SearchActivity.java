@@ -14,7 +14,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
 import com.memesAndPunkRock.fakeInst.api.data.UserData;
 import com.memesAndPunkRock.fakeInst.api.impl.InstApiControllerImpl;
-import com.memesAndPunkRock.fakeInst.exception.UserNotFoundException;
 import com.memesAndPunkRock.fakeInst.ml.CustomModelController;
 import com.memesAndPunkRock.fakeInst.ml.impl.CustomModelControllerImpl;
 
