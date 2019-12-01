@@ -3,7 +3,12 @@ package com.memesAndPunkRock.fakeInst.api.impl;
 import android.util.Log;
 
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
+import com.memesAndPunkRock.fakeInst.api.data.UserContainer;
 import com.memesAndPunkRock.fakeInst.api.data.UserData;
+import com.memesAndPunkRock.fakeInst.api.data.UserInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -18,7 +23,6 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -32,10 +36,9 @@ public class InstApiControllerImpl implements InstApiController {
     private static final String USER_REQUEST_PATTERN = BASE_URL+"/";
 
     private String createConnection(String urlS, String methodInvoked, String patchBody, String postBody, String putBody){
-        URL url ;
+        URL url;
         BufferedReader br = null;
         String toBeReturned="";
-        String error;
 
         try {
             url = new URL(urlS);
@@ -59,13 +62,11 @@ public class InstApiControllerImpl implements InstApiController {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, null);
 
-
             HttpsURLConnection  connection = (HttpsURLConnection) url.openConnection();
             connection.setConnectTimeout(60000);
             HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
             connection.setSSLSocketFactory(sc.getSocketFactory());
             connection.setHostnameVerifier(hostnameVerifier);
-
 
             if (patchBody  != null ){
                 Log.i(TAG, " createConnection with PATH with body" );
@@ -131,7 +132,6 @@ public class InstApiControllerImpl implements InstApiController {
             }
             else{
 
-
                 br = new BufferedReader( new InputStreamReader(connection.getInputStream()));
                 StringBuilder sb = new StringBuilder();
                 String line = null;
@@ -142,13 +142,10 @@ public class InstApiControllerImpl implements InstApiController {
 
             }
 
-        } catch (IOException e) {
-            error = e.getMessage();
+        } catch (IOException | KeyManagementException | NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally{
+        } // TODO Auto-generated catch block
+        finally{
             try {
                 if (br!=null)
                     br.close();
@@ -157,12 +154,13 @@ public class InstApiControllerImpl implements InstApiController {
                 e.printStackTrace();
             }
         }
+
         Log.i(TAG, " createConnetion  finally returned" +  toBeReturned );
         return toBeReturned;
     }
 
 
-    private UserData convertUserFeedDataToUserData(String feedData) {
+    private UserData parseUserData(String feedData) {
         if (feedData == null){
             return null;
         }
@@ -176,13 +174,40 @@ public class InstApiControllerImpl implements InstApiController {
         return convertedData;
     }
 
+    private UserInfo parseUserInfo(String userInfoString) throws JSONException {
+        if(userInfoString == null || userInfoString.isEmpty()){
+            return null;
+        }
+
+        final JSONObject jObject = new JSONObject(userInfoString);
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setAvatarUrl(jObject.getString("pic_url"));
+        userInfo.setUsername(jObject.getString("username"));
+        userInfo.setFollowers(jObject.getString("followers"));
+        userInfo.setFollowing(jObject.getString("follows"));
+        userInfo.setIsReal("True");// todo: refactor
+
+        return userInfo;
+    }
+
     @Override
-    public UserData getUserDataByUserName(String username){
-        String requestUrl = USER_REQUEST_PATTERN ;
-        String body = username;
+    public UserContainer getUserDataByUserName(String username){
         try {
-            String methodInvoked = "GET";
-            createConnection (requestUrl, methodInvoked,body, null,null);
+            final String methodInvoked = "GET";
+            final String jsonString = createConnection (USER_REQUEST_PATTERN, methodInvoked, username,
+                    null,null);
+            final JSONObject jObject = new JSONObject(jsonString);
+            final String message = jObject.getString("message");
+
+            if (message.equals("empty") || message.equals("unsuccess")){
+                return null;
+            }
+
+            UserInfo userInfo = parseUserInfo(message);
+            UserData userData = parseUserData(jsonString);
+
+            return new UserContainer(userData, userInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }
