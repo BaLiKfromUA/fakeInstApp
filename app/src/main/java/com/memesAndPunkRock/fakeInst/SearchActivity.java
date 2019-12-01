@@ -3,11 +3,13 @@ package com.memesAndPunkRock.fakeInst;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
@@ -46,14 +48,18 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
             if (usernameField.getText() != null && !usernameField.getText().toString().isEmpty()) {
                 String username = usernameField.getText().toString();
                 AsyncInstaSearch search = new AsyncInstaSearch();
-//                search.execute(username); fuck lifecycle
-                userContainer = search.doInBackground(username);
+                search.execute(username);
+
+
+                while (search.getStatus() != AsyncTask.Status.FINISHED){
+                    Log.d("Async" , "Run");
+                }
 
                 if (userContainer != null) {
                     Intent intent = new Intent(this, InfoActivity.class);
                     intent.putExtra("USER_CONTAINER", userContainer);
                     startActivity(intent);
-                }else{
+                } else {
                     new MaterialAlertDialogBuilder(this)
                             .setTitle("Search don't get any result")
                             .setMessage("Cannot find user")
@@ -67,6 +73,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
     private class AsyncInstaSearch extends AsyncTask<String, Void, UserContainer> {
         @Override
         protected UserContainer doInBackground(String... strings) {
+            Log.i("ASYNC", "BACK");
             return instApi.getUserDataByUserName(strings[0]);
 
         }
@@ -79,6 +86,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
         @Override
         protected void onPostExecute(UserContainer userContainer) {
             super.onPostExecute(userContainer);
+            Log.i("Async", "POST");
+            SearchActivity.this.userContainer = userContainer;
         }
     }
 }
