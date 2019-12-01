@@ -176,9 +176,17 @@ public class CustomModelControllerImpl implements CustomModelController {
         initCustomModel(activity);
     }
 
+    private float[] prepareData(UserData data){
+        return new float[]{data.getIsUserWithoutAvatar(), data.getRatioOfNumbersCharsToUsernameLength(),
+                data.getFullNameTokensNumber(),data.getRatioOfNumbersCharsToFullNameLength(),
+                data.getIsUsernameEqualsFullname(),
+                data.getDescriptionLength(), data.getHasExternalUrl(),
+                data.getIsPrivate(),data.getPostsNumber(), data.getFollowersNumber(), data.getFollowsNumber()};
+    }
+
     @Override
     public List<String> getPredictions(UserData user) {
-        runModelInference(null);//todo: refactor
+        runModelInference(prepareData(user));
         return mLabelList;
     }
 }

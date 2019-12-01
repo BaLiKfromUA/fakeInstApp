@@ -179,6 +179,7 @@ public class InstApiControllerImpl implements InstApiController {
         convertedData.setPostsNumber((float)jObject.getDouble("#posts"));
         convertedData.setFollowersNumber((float)jObject.getDouble("#followers"));
         convertedData.setFollowsNumber((float)jObject.getDouble("#follows"));
+        convertedData.setIsPrivate((float)jObject.getDouble("private"));
 
         return convertedData;
     }
@@ -204,24 +205,19 @@ public class InstApiControllerImpl implements InstApiController {
     public UserContainer getUserDataByUserName(String username){
         try {
             final String methodInvoked = "GET";
-            Log.i("0", "0");
             final String jsonString = createConnection (USER_REQUEST_PATTERN, methodInvoked, username,
                     null,null);
+
             final JSONObject jObject = new JSONObject(jsonString);
             final String message = jObject.getString("message");
-
-            Log.i("1","1");
 
             if (message.equals("empty") || message.equals("unsuccess")){
                 return null;
             }
 
-            Log.i("2", "2");
-
             UserInfo userInfo = parseUserInfo(message);
             UserData userData = parseUserData(jsonString);
 
-            Log.i("3","3");
             return new UserContainer(userData, userInfo);
         } catch (Exception e) {
             e.getStackTrace();
