@@ -19,6 +19,7 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -160,17 +161,25 @@ public class InstApiControllerImpl implements InstApiController {
     }
 
 
-    private UserData parseUserData(String feedData) {
-        if (feedData == null){
+    private UserData parseUserData(String userDataString) throws JSONException {
+        if (userDataString == null || userDataString.isEmpty()){
             return null;
         }
 
+        final JSONObject jObject = new JSONObject(userDataString);
+
         UserData convertedData = new UserData();
-        float numberOfNumChars = feedData.chars()
-                .filter(Character::isDigit)
-                .count();
-        convertedData.setRatioOfNumbersCharsToUsernameLength(numberOfNumChars / feedData.length());
-        //todo:
+        convertedData.setIsUserWithoutAvatar((float) jObject.getDouble("profile pic"));
+        convertedData.setRatioOfNumbersCharsToUsernameLength((float)jObject.getDouble("nums/length username"));
+        convertedData.setFullNameTokensNumber((float)jObject.getDouble("fullname words"));
+        convertedData.setRatioOfNumbersCharsToFullNameLength((float)jObject.getDouble("nums/length fullname"));
+        convertedData.setIsUsernameEqualsFullname((float)jObject.getDouble("name==username"));
+        convertedData.setDescriptionLength((float)jObject.getDouble("description length"));
+        convertedData.setHasExternalUrl((float)jObject.getDouble("external URL"));
+        convertedData.setPostsNumber((float)jObject.getDouble("#posts"));
+        convertedData.setFollowersNumber((float)jObject.getDouble("#followers"));
+        convertedData.setFollowsNumber((float)jObject.getDouble("#follows"));
+
         return convertedData;
     }
 
@@ -209,9 +218,8 @@ public class InstApiControllerImpl implements InstApiController {
 
             return new UserContainer(userData, userInfo);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
         return null;
     }
-
 }
