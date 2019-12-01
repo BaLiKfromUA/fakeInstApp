@@ -12,4 +12,6 @@
     <string name="app_description">Suspected\nAccount Analysis</string>
     <string name="app_full_description">Analyze the account and reveal the truth!</string>
     <string name="insta_statystics">Instagram may have 95 millions bot accounts.\nTry to find real</string>
+    <string name="first_fake_metric">Follower and Followers\nAnalysis</string>
+    <string name="second_fake_metric">Reliabilty rate\n93%</string>
 </resources>

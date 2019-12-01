@@ -218,7 +218,7 @@ public class InstApiControllerImpl implements InstApiController {
 
             return new UserContainer(userData, userInfo);
         } catch (Exception e) {
-            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
+            e.getStackTrace();
         }
         return null;
     }
