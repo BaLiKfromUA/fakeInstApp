@@ -19,7 +19,6 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.Objects;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -179,6 +178,7 @@ public class InstApiControllerImpl implements InstApiController {
         convertedData.setPostsNumber((float)jObject.getDouble("#posts"));
         convertedData.setFollowersNumber((float)jObject.getDouble("#followers"));
         convertedData.setFollowsNumber((float)jObject.getDouble("#follows"));
+        convertedData.setIsPrivate((float)jObject.getDouble("private"));
 
         return convertedData;
     }

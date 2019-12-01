@@ -1,25 +1,25 @@
 package com.memesAndPunkRock.fakeInst;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
 import com.memesAndPunkRock.fakeInst.api.data.UserContainer;
 import com.memesAndPunkRock.fakeInst.api.impl.InstApiControllerImpl;
-import com.memesAndPunkRock.fakeInst.ml.CustomModelController;
-import com.memesAndPunkRock.fakeInst.ml.impl.CustomModelControllerImpl;
+import com.memesAndPunkRock.fakeInst.ml.Classifier;
+import com.memesAndPunkRock.fakeInst.ml.impl.ClassifierFloatNet;
+
+import java.io.IOException;
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnClickListener {
 
@@ -31,7 +31,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
     private Thread t;
     private InstApiController instApi = new InstApiControllerImpl();
 
-    private CustomModelController modelController;
+    private Classifier classifier;
 
     private UserContainer userContainer;
 
@@ -42,7 +42,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
 
         findBtn = findViewById(R.id.findBtn);
         usernameField = findViewById(R.id.usernameField);
-        modelController = new CustomModelControllerImpl(this);
+        try {
+            classifier = new ClassifierFloatNet(this,1);
+        } catch (IOException e) {
+            classifier = null;
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -69,7 +74,37 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
                     //do nothing
                 }
 
+
+
                 if (userContainer != null) {
+
+                    t = new Thread() {
+                        @Override
+                        public void interrupt() {
+                            super.interrupt();
+                        }
+
+                        @Override
+                        public void run() {
+                            List<Classifier.Recognition> recognitions = classifier.recognize(userContainer.getUserData());
+                            Log.e("BALIK", recognitions.toString());
+                            float confidence = recognitions.get(0).getConfidence();
+                            String verdict = "True";
+
+                            if(confidence > 0.0f){
+                                verdict = "False";
+                            }
+
+                            userContainer.getUserInfo().setIsReal(verdict);
+                            Thread.currentThread().interrupt();//todo: check
+                        }
+                    };
+                    t.start();
+
+                    while (!t.isInterrupted()){
+                        //do nothing
+                    }
+
                     Intent intent = new Intent(this, InfoActivity.class);
                     intent.putExtra("USER_CONTAINER", userContainer.getUserInfo());
                     startActivity(intent);
@@ -81,39 +116,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
                             .show();
                 }
             }
-        }
-    }
-
-    private class AsyncInstaSearch extends AsyncTask<String, Void, UserContainer> {
-        @Override
-        protected UserContainer doInBackground(String... strings) {
-            Log.i("Async", "BACK");
-            return instApi.getUserDataByUserName(strings[0]);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            if(isCancelled()){
-                return;
-            }
-            super.onPreExecute();
-            Log.i("Async", "PRE");
-        }
-
-        @Override
-        protected void onPostExecute(UserContainer userContainer) {
-            if(isCancelled()){
-                return;
-            }
-            this.cancel(true);
-            SearchActivity.this.userContainer = userContainer;
-            Log.i("Async", "POST");
-            super.onPostExecute(userContainer);
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
         }
     }
 }
