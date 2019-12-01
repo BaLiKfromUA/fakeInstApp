@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">DSV Insta</string>
     <string name="please_enter_username">Please enter instagram username</string>
     <string name="username_hint">Username</string>
     <string name="find_button_text">Find</string>

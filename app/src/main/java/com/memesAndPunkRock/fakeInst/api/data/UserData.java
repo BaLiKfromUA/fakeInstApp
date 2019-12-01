@@ -37,6 +37,7 @@ public class UserData implements Serializable {
      **/
     private Float descriptionLength;
 
+    private Float isPrivate;
 
     /**
      * has external URL or not
@@ -49,7 +50,6 @@ public class UserData implements Serializable {
 
     private Float followsNumber;
 
-    private Float isPrivate;
 
     public Float getIsUserWithoutAvatar() {
         return isUserWithoutAvatar;
