@@ -88,7 +88,15 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnCl
                         public void run() {
                             List<Classifier.Recognition> recognitions = classifier.recognize(userContainer.getUserData());
                             Log.e("BALIK", recognitions.toString());
-                            Thread.currentThread().interrupt();
+                            float confidence = recognitions.get(0).getConfidence();
+                            String verdict = "True";
+
+                            if(confidence > 0.0f){
+                                verdict = "False";
+                            }
+
+                            userContainer.getUserInfo().setIsReal(verdict);
+                            Thread.currentThread().interrupt();//todo: check
                         }
                     };
                     t.start();
