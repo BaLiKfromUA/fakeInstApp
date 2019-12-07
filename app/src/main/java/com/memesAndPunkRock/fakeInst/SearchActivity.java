@@ -1,15 +1,14 @@
 package com.memesAndPunkRock.fakeInst;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.memesAndPunkRock.fakeInst.api.InstApiController;
@@ -18,99 +17,102 @@ import com.memesAndPunkRock.fakeInst.api.impl.InstApiControllerImpl;
 import com.memesAndPunkRock.fakeInst.ml.Classifier;
 import com.memesAndPunkRock.fakeInst.ml.impl.ClassifierFloatNet;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Activity, that is using to find user
+ *
+ * @author ozgreat
+ */
 public class SearchActivity extends AppCompatActivity implements SearchView.OnClickListener {
-
+    /**
+     * Filed to enter username
+     */
     private TextInputEditText usernameField;
 
-    private MaterialButton findBtn;
-
-    private Handler h;
-    private Thread t;
+    /**
+     * Api to find user in instagram todo Balik
+     */
     private InstApiController instApi = new InstApiControllerImpl();
 
+    /**
+     * todo Balik
+     */
     private Classifier classifier;
 
+    /**
+     * todo Balik
+     */
     private UserContainer userContainer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        findBtn = findViewById(R.id.findBtn);
         usernameField = findViewById(R.id.usernameField);
         try {
-            classifier = new ClassifierFloatNet(this,1);
+            classifier = new ClassifierFloatNet(this, 1);
         } catch (IOException e) {
             classifier = null;
             e.printStackTrace();
         }
     }
 
+    /**
+     * Handle click on find button
+     *
+     * @param v view, that was clicked
+     */
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.findBtn) {
             if (usernameField.getText() != null && !usernameField.getText().toString().isEmpty()) {
-                String username = usernameField.getText().toString();
+                String username = StringUtils.strip(usernameField.getText().toString());
 
-                t = new Thread() {
-                    @Override
-                    public void interrupt() {
-                        super.interrupt();
-                    }
+                AtomicBoolean isSearchRunning = new AtomicBoolean(true);
+                AsyncTask.execute(() -> {
+                    userContainer = instApi.getUserDataByUserName(username);
+                    isSearchRunning.set(false);
+                });
 
-                    @Override
-                    public void run() {
-                       userContainer = instApi.getUserDataByUserName(username);
-                       Thread.currentThread().interrupt();
-                    }
-                };
-                t.start();
-
-                while (!t.isInterrupted()){
-                    //do nothing
+                while (isSearchRunning.get()) {
+                    //
                 }
-
-
 
                 if (userContainer != null) {
 
-                    t = new Thread() {
-                        @Override
-                        public void interrupt() {
-                            super.interrupt();
+                    AtomicBoolean isRecognizingRunning = new AtomicBoolean(true);
+                    AsyncTask.execute(() -> {
+                        List<Classifier.Recognition> recognitions = classifier.recognize(userContainer.getUserData());
+                        Log.e("BALIK", recognitions.toString());
+                        float confidence = recognitions.get(0).getConfidence();
+                        String verdict = "True";
+
+                        if (confidence > 0.0f) {
+                            verdict = "False";
                         }
 
-                        @Override
-                        public void run() {
-                            List<Classifier.Recognition> recognitions = classifier.recognize(userContainer.getUserData());
-                            Log.e("BALIK", recognitions.toString());
-                            float confidence = recognitions.get(0).getConfidence();
-                            String verdict = "True";
-
-                            if(confidence > 0.0f){
-                                verdict = "False";
-                            }
-
-                            if(username.equalsIgnoreCase("msp_ua")){
-                                verdict = "True";
-                            }
-
-                            userContainer.getUserInfo().setIsReal(verdict);
-                            Thread.currentThread().interrupt();//todo: check
+                        if (username.equalsIgnoreCase("msp_ua")) {
+                            verdict = "True";
                         }
-                    };
-                    t.start();
 
-                    while (!t.isInterrupted()){
-                        //do nothing
+                        userContainer.getUserInfo().setIsReal(verdict);
+
+                        isRecognizingRunning.set(false);
+                    });
+
+                    while (isRecognizingRunning.get()) {
+                        //
                     }
 
                     Intent intent = new Intent(this, InfoActivity.class);
-                    intent.putExtra("USER_CONTAINER", userContainer.getUserInfo());
+                    intent.putExtra("USER_INFO", userContainer.getUserInfo());
                     startActivity(intent);
                 } else {
                     new MaterialAlertDialogBuilder(this)
