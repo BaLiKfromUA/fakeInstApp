@@ -97,24 +97,27 @@
 
     <LinearLayout
         android:id="@+id/infoLinear"
-        android:layout_width="336dp"
-        android:layout_height="320dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:background="@drawable/rounded_info_shape"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/rounded_text_in_list"
             android:drawableEnd="@drawable/round_verified_user_24"
-            android:drawablePadding="9dp"
+            android:drawablePadding="5dp"
             android:drawableTint="@color/colorGreenSuccess"
             android:text="@string/first_fake_metric"
             android:textSize="22sp" />
@@ -123,10 +126,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/rounded_text_in_list"
             android:drawableEnd="@drawable/round_verified_user_24"
-            android:drawablePadding="9dp"
+            android:drawablePadding="5dp"
             android:drawableTint="@color/colorGreenSuccess"
             android:text="@string/second_fake_metric"
             android:textSize="22sp" />
