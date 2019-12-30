@@ -2,7 +2,7 @@
 IC Night Hackathon`19 project
 
 ---
-- [Presentation](https://www.canva.com/design/DADsuPEOvzw/nD06zHcwoan2ttunRNqRmw/view?utm_content=DADsuPEOvzw&utm_campaign=designshare&utm_medium=link&utm_source=sharebutton)
+- [Presentation](https://www.slideshare.net/ssuser7e3173/project-pitch-212901318)
 
 ## Screenshots
 <p float="left">
